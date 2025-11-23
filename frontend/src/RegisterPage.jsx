@@ -19,6 +19,20 @@ const RegisterPage = () => {
   const navigate = useNavigate();
   const FACEBOOK_APP_ID = import.meta.env.VITE_FACEBOOK_APP_ID;
   
+import React, { useState } from 'react';
+import { FaGoogle, FaFacebook } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import './RegisterPage.css'; 
+
+const RegisterPage = () => {
+  const [role, setRole] = useState('mother'); 
+
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    password: '',
+  });
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -104,6 +118,11 @@ const RegisterPage = () => {
         );
       }
     }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const payload = { ...formData, role };
+    console.log("Submitting:", payload);
+   
   };
 
   return (
@@ -111,6 +130,9 @@ const RegisterPage = () => {
       <div className="auth-wrapper">
         <div className="auth-header">
           <span className="name">मातृCare</span>
+        
+        <div className="auth-header">
+          <span className="logo">MamaMindSense</span>
           <h2 className="title">Create your account.</h2>
           <p className="subtitle">Join us to start your journey.</p>
         </div>
@@ -120,6 +142,8 @@ const RegisterPage = () => {
             type="button"
             onClick={() => setRole("mother")}
             className={`toggle-btn ${role === "mother" ? "active" : ""}`}
+            onClick={() => setRole('mother')}
+            className={`toggle-btn ${role === 'mother' ? 'active' : ''}`}
           >
             Mother
           </button>
@@ -127,6 +151,8 @@ const RegisterPage = () => {
             type="button"
             onClick={() => setRole("professional")}
             className={`toggle-btn ${role === "professional" ? "active" : ""}`}
+            onClick={() => setRole('professional')}
+            className={`toggle-btn ${role === 'professional' ? 'active' : ''}`}
           >
             Healthcare Professional
           </button>
@@ -249,14 +275,30 @@ const RegisterPage = () => {
         <div className="auth-footer">
           <p>
             Already have an account?{" "}
+        <div className="social-login">
+          <button className="btn-social">
+            <FaGoogle size={20} />
+            Google
+          </button>
+          <button className="btn-social">
+            <FaFacebook size={22} />
+            Facebook
+          </button>
+        </div>
+        
+        <div className="auth-footer">
+          <p>
+            Already have an account?{' '}
             <Link to="/login" className="link-highlight">
               Log In
             </Link>
           </p>
         </div>
+
       </div>
     </div>
   );
 };
 
+export default RegisterPage;
 export default RegisterPage;
