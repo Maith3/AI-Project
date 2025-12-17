@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
-import MoodTrendChart from './components/MoodTrendChart';
-import MoodInput from './components/MoodInput';
-import JournalSection from './components/JournalSection';
-import HappyMoments from './components/HappyMoments';
-import NotificationsPanel from './components/NotificationsPanel';
-import MotivationalQuote from './components/MotivationalQuote';
+import MoodTrendChart from '../components/MoodTrendChart';
+import MoodInput from '../components/MoodInput';
+import JournalSection from '../components/JournalSection';
+import HappyMoments from '../components/HappyMoments';
+import NotificationsPanel from '../components/NotificationsPanel';
+import MotivationalQuote from '../components/MotivationalQuote';
 
 const handleLogout = () => {
   localStorage.removeItem('token');
