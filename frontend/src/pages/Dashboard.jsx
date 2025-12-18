@@ -1,29 +1,53 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './Dashboard.css';
-import MoodTrendChart from '../components/MoodTrendChart';
-import MoodInput from '../components/MoodInput';
-import JournalSection from '../components/JournalSection';
-import HappyMoments from '../components/HappyMoments';
-import NotificationsPanel from '../components/NotificationsPanel';
-import MotivationalQuote from '../components/MotivationalQuote';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "./Dashboard.css";
+import axios from "axios";
+import MoodTrendChart from "../components/MoodTrendChart";
+import MoodInput from "../components/MoodInput";
+import JournalSection from "../components/JournalSection";
+import HappyMoments from "../components/HappyMoments";
+import NotificationsPanel from "../components/NotificationsPanel";
+import MotivationalQuote from "../components/MotivationalQuote";
 
 const handleLogout = () => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('userRole');
-  navigate('/login');
+  localStorage.removeItem("token");
+  localStorage.removeItem("userRole");
+  navigate("/login");
 };
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const userRole = localStorage.getItem('userRole');
-  
+  const userRole = localStorage.getItem("userRole");
+  const [profileRoute, setProfileRoute] = useState("/profile-setup");
   const [moodData, setMoodData] = useState([]);
   const [journalEntries, setJournalEntries] = useState([]);
   const [happyMoments, setHappyMoments] = useState([]);
   const [notifications, setNotifications] = useState([]);
-  const [timeRange, setTimeRange] = useState('week');
+  const [timeRange, setTimeRange] = useState("week");
   const [selectedMood, setSelectedMood] = useState(null);
+
+  useEffect(() => {
+    const checkProfileStatus = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        const res = await axios.get("http://localhost:5000/api/user/profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (res.data.isNewProfile) {
+          setProfileRoute("/profile-setup");
+        } else {
+          setProfileRoute("/profile-view");
+        }
+      } catch (err) {
+        console.error("Error checking profile:", err);
+      }
+    };
+
+    checkProfileStatus();
+  }, []);
 
   useEffect(() => {
     loadMoodData();
@@ -38,29 +62,32 @@ const Dashboard = () => {
   };
 
   const loadJournalEntries = () => {
-    const entries = JSON.parse(localStorage.getItem('journalEntries') || '[]');
+    const entries = JSON.parse(localStorage.getItem("journalEntries") || "[]");
     setJournalEntries(entries);
   };
 
   const loadHappyMoments = () => {
-    const moments = JSON.parse(localStorage.getItem('happyMoments') || '[]');
+    const moments = JSON.parse(localStorage.getItem("happyMoments") || "[]");
     setHappyMoments(moments);
   };
 
   const loadNotifications = () => {
-    const notif = JSON.parse(localStorage.getItem('notifications') || '[]');
+    const notif = JSON.parse(localStorage.getItem("notifications") || "[]");
     setNotifications(notif);
   };
 
   const generateMoodData = (range) => {
     const moods = [1, 2, 3, 4, 5];
-    const labels = range === 'day' ? Array.from({length: 24}, (_, i) => `${i}:00`) 
-                 : range === 'week' ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                 : Array.from({length: 30}, (_, i) => `Day ${i + 1}`);
-    
+    const labels =
+      range === "day"
+        ? Array.from({ length: 24 }, (_, i) => `${i}:00`)
+        : range === "week"
+        ? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+        : Array.from({ length: 30 }, (_, i) => `Day ${i + 1}`);
+
     return labels.map((label, idx) => ({
       label,
-      mood: moods[Math.floor(Math.random() * moods.length)]
+      mood: moods[Math.floor(Math.random() * moods.length)],
     }));
   };
 
@@ -72,103 +99,107 @@ const Dashboard = () => {
     const newEntry = {
       id: Date.now(),
       date: new Date().toLocaleDateString(),
-      text: entry
+      text: entry,
     };
     const updated = [newEntry, ...journalEntries];
     setJournalEntries(updated);
-    localStorage.setItem('journalEntries', JSON.stringify(updated));
+    localStorage.setItem("journalEntries", JSON.stringify(updated));
   };
 
   const handleAddHappyMoment = (moment) => {
     const newMoment = {
       id: Date.now(),
       date: new Date().toLocaleDateString(),
-      description: moment
+      description: moment,
     };
     const updated = [newMoment, ...happyMoments];
     setHappyMoments(updated);
-    localStorage.setItem('happyMoments', JSON.stringify(updated));
+    localStorage.setItem("happyMoments", JSON.stringify(updated));
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userRole');
-    navigate('/login');
+    localStorage.removeItem("token");
+    localStorage.removeItem("userRole");
+    navigate("/login");
   };
 
   return (
-  <div className="dashboard-wrapper">
-    {/* Top bar: app title, role, profile feature box and logout */}
-    <div className="dashboard-top-bar">
-      <div className="top-bar-left">
-        <h1 className="app-title">मातृCare</h1>
+    <div className="dashboard-wrapper">
+      <div className="dashboard-top-bar">
+        <div className="top-bar-left">
+          <img src="/love.png" alt="Logo Icon" className="app-logo-icon" />
+          <h1 className="app-title">मातृCare</h1>
+        </div>
+
+        <div className="header-actions">
+          <button
+            className="feature-box"
+            title={
+              profileRoute === "/profile-view"
+                ? "View Profile"
+                : "Complete Profile"
+            }
+            onClick={() => navigate(profileRoute)}
+          >
+            <div className="feature-label">Profile</div>
+          </button>
+
+          <button onClick={handleLogout} className="logout-btn" title="Logout">
+            Logout
+          </button>
+        </div>
       </div>
 
-      <div className="header-actions">
-        <button
-          className="feature-box"
-          title="Go to profile"
-        >
-          <div className="feature-label">Profile</div>
-        </button>
+      <div className="dashboard-container">
+        <header className="dashboard-header-extra">
+          <h2 style={{ marginLeft: "100px" }}>
+            Track your emotions and celebrate your journey
+          </h2>
+        </header>
 
-        <button
-          onClick={handleLogout}
-          className="logout-btn"
-          title="Logout"
-        >
-          Logout
-        </button>
+        <div className="dashboard-grid">
+          {/* Left Column */}
+          <div className="dashboard-left">
+            {/* Happy Moments */}
+            <div className="dashboard-card">
+              <h2>Happy Moments</h2>
+              <HappyMoments
+                moments={happyMoments}
+                onAddMoment={handleAddHappyMoment}
+              />
+            </div>
+          </div>
+
+          {/* Middle Column */}
+          <div className="dashboard-middle">
+            {/* Motivational Quote */}
+            <div className="dashboard-card">
+              <MotivationalQuote />
+            </div>
+            {/* Daily Mood Input */}
+            <div className="dashboard-card">
+              <h2>How is your today?</h2>
+              <MoodInput
+                onMoodSelect={handleMoodSelect}
+                selectedMood={selectedMood}
+              />
+            </div>
+          </div>
+
+          {/* Right Column */}
+          <div className="dashboard-right">
+            {/* Journal Section */}
+            <div className="dashboard-card">
+              <h2>Daily Journal</h2>
+              <JournalSection
+                entries={journalEntries}
+                onAddEntry={handleAddJournalEntry}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-
-    {/* Main Dashboard Container */}
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <h2>Track your emotions and celebrate your journey</h2>
-      </header>
-
-      <div className="dashboard-grid">
-        {/* Left Column */}
-        <div className="dashboard-left">
-          {/* Happy Moments */}
-          <div className="dashboard-card">
-            <h2>Happy Moments</h2>
-            <HappyMoments 
-              moments={happyMoments}
-              onAddMoment={handleAddHappyMoment}
-            />
-          </div>
-
-        </div>
-
-        {/* Middle Column */}
-        <div className="dashboard-middle">
-          {/* Motivational Quote */}
-          <div className="dashboard-card">
-            <MotivationalQuote />
-          </div>
-          {/* Daily Mood Input */}
-          <div className="dashboard-card">
-            <h2>How is your today?</h2>
-            <MoodInput onMoodSelect={handleMoodSelect} selectedMood={selectedMood} />
-          </div>
-        </div>
-
-        {/* Right Column */}
-        <div className="dashboard-right">
-          {/* Journal Section */}
-          <div className="dashboard-card">
-            <h2>Daily Journal</h2>
-            <JournalSection 
-              entries={journalEntries}
-              onAddEntry={handleAddJournalEntry}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-);
+  );
 };
 export default Dashboard;
