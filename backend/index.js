@@ -7,7 +7,18 @@ dotenv.config();
 
 const app = express();
 
+<<<<<<< HEAD
+const corsOptions = {
+  origin: 'http://localhost:5173', 
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
+=======
 app.use(cors());
+>>>>>>> 3a78add0b4ed6a220d0894bc79df6e3faa729ddc
 app.use(express.json());
 
 const connectDB = async () => {
@@ -23,9 +34,16 @@ const connectDB = async () => {
 connectDB();
 
 const authRoutes = require('./routes/auth'); 
+<<<<<<< HEAD
+const userRoutes = require('./routes/user');
+
+app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
+=======
 
 app.use('/api/auth', authRoutes);
 
+>>>>>>> 3a78add0b4ed6a220d0894bc79df6e3faa729ddc
 app.get('/', (req, res) => {
   res.send('IVPOI Backend is running...');
 });

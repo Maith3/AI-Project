@@ -9,6 +9,7 @@ import {
   FaUserFriends,
   FaArrowLeft,
   FaPhoneAlt,
+  FaFileAlt
 } from "react-icons/fa";
 
 const UserProfile = () => {
@@ -50,7 +51,6 @@ const UserProfile = () => {
     }
   }, [loading, profile, navigate]);
 
-  if (loading) return <div className="loading-screen">Loading...</div>;
   if (!profile) return null;
 
   const formatDate = (dateString) => {
@@ -64,32 +64,42 @@ const UserProfile = () => {
 
   return (
     <div className="dashboard-container">
-      <header className="dashboard-header">
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-          <button
-            onClick={() => navigate("/dashboard")}
-            className="btn-back"
-            title="Back to Dashboard"
-          >
-            <FaArrowLeft />
-          </button>
-          <h1 style={{ color: "#fb6f6d" }}>My Profile</h1>
-        </div>
+    <header className="dashboard-header">
+      
+      <button
+        onClick={() => navigate("/dashboard")}
+        className="btn-back"
+        title="Back to Dashboard"
+      >
+        <FaArrowLeft />
+      </button>
 
-        <button
-          className="btn-logout"
-          onClick={() => navigate("/profile-setup")}
-        >
-          <FaUserEdit style={{ marginRight: "8px" }} /> Edit
-        </button>
-      </header>
+      <h1 className="header-title" style={{color:'white'}}>
+        My Profile
+      </h1>
 
-      {/* 3. Reuse Dashboard Grid for Layout */}
+      <button 
+      className="btn-pill"
+      onClick={() => navigate("/reports")} 
+    >
+      <FaFileAlt style={{ marginRight: "6px" }} /> My Report
+    </button>
+
+      <button
+        className="btn-edit"
+        onClick={() => navigate("/profile-setup")}
+      >
+        <FaUserEdit style={{ marginRight: "8px" }} /> Edit
+      </button>
+
+    </header>
+
+     
       <div
         className="dashboard-grid"
         style={{ gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))" }}
       >
-        {/* CARD 1: PERSONAL INFO */}
+        
         <div className="feature-box profile-card">
           <div className="card-header-row">
             <div className="icon-circle">
@@ -181,12 +191,12 @@ const UserProfile = () => {
 
       <div className="full-width-quote-wrapper">
         <div className="quote-center-box">
-          <div className="motivational-quote">
+          <div className="motivational-quote-extra">
             <div className="quote-content">
               <p className="quote-text">
                 "Pregnancy is a process that invites you to surrender to the unseen force behind all life."
               </p>
-              <p className="quote-author">— Judy Ford</p>
+              <p className="quote-author" style={{color:'#BE123C'}}>— Judy Ford</p>
             </div>
           </div>
         </div>
