@@ -114,7 +114,7 @@ const Dashboard = () => {
         <div className="header-actions">
            <button
             className="feature-box profile"
-            
+
             onClick={() => navigate(profileRoute)}
           >
             <CgProfile />
@@ -123,7 +123,7 @@ const Dashboard = () => {
 
           <button
             className="feature-box"
-            onClick={() => navigate(profileRoute)}
+            onClick={() => navigate('/doctors-team')}
           >
             <CgProfile />
             Doctors team
