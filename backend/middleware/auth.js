@@ -22,8 +22,6 @@ const auth = (req, res, next) => {
   }
 };
 
-module.exports = auth;
-
 module.exports = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
@@ -39,3 +37,5 @@ module.exports = (req, res, next) => {
     return res.status(401).json({ error: "Invalid token" });
   }
 };
+
+module.exports = auth;
