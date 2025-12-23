@@ -7,6 +7,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import UserProfile from './pages/UserProfile';
 import ProfileSetup from './pages/ProfileSetup'
+import DoctorsTeam from './pages/DoctorsTeam';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile-view" element={<UserProfile />} />
         <Route path="/profile-setup" element={<ProfileSetup />} />
+         <Route path="/doctors-team" element={<DoctorsTeam />} />
       </Routes>
     </BrowserRouter>
   );

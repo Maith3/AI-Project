@@ -6,7 +6,6 @@ body {
   min-height: 100vh;
   background-color: #f8fafc;
   font-family: "sans-serif", "Segoe UI";
-  padding: 2rem 2rem;
 }
 
 .dashboard-header {
@@ -15,11 +14,11 @@ body {
   align-items: center;
   margin-bottom: 2rem;
   margin-left: 5px;
-  
+  margin-top: 0px;
 }
 
 .dashboard-header h1 {
-  color: #334155;
+  color: white;
   font-size: 1.8rem;
   margin: 0;
 }
