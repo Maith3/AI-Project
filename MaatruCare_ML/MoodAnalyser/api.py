@@ -8,8 +8,9 @@ from report_generator import generate_mood_report
 from pymongo import MongoClient
 import uvicorn
 import os
+from bson import ObjectId 
 from typing import Any,Dict
-from datetime import datetime
+from datetime import datetime, UTC
 
 app = FastAPI(title="MaatruCare ML API v1.0")
 
@@ -24,27 +25,41 @@ app.add_middleware(
 
 MONGO_URI = os.getenv("MONGO_URI")
 client = MongoClient(MONGO_URI)
-db = client.maatruCareJournal
-moods_collection = db.moods
+db = client.MaatruCare
+moods_collection = db.journals
 
 class MoodRequest(BaseModel):
     text: str
     userId: str
+    journalId: str 
 
 @app.post("/analyze-mood")
 def analyze_mood(req: MoodRequest):
-    """Analyze journal text → Save to MongoDB"""
+    print("ANALYZE-MOOD called with:", req.dict())
+
     result: Dict[str, Any] = analyzer.getMoodAnalysisResult(req.text)
+    print("Analyzer result:", result)
 
-    doc = {
-        "userId": req.userId,          # email
-        "text": req.text,              # original journal text
-        **result,
-        "timestamp": result.get("timestamp", datetime.utcnow()),
+    update = {
+        "$set": {
+            "sentiment_score": result.get("sentiment_score", 0),
+            "risk_level": result.get("risk_level") or result.get("risk"),
+            "timestamp": result.get("timestamp", datetime.now(UTC)),
+        }
     }
-    moods_collection.insert_one(doc)
 
-    return doc
+    filter_ = {
+        "_id": ObjectId(req.journalId),
+        "userId": ObjectId(req.userId),
+    }
+    print("Mongo filter:", filter_)
+    print("Mongo update:", update)
+
+    res = moods_collection.update_one(filter_, update)
+    print("Mongo matched:", res.matched_count, "modified:", res.modified_count)
+
+    return {"matched": res.matched_count, "modified": res.modified_count}
+
 
 @app.post("/check-alerts")
 def trigger_alerts():
@@ -59,6 +74,7 @@ def health():
 @app.get("/report/{user_id}")
 def get_report(user_id: str):
     """Generate PDF mood report"""
+    print("REPORT endpoint called with user_id:", repr(user_id))
     pdf = generate_mood_report(user_id)
     if pdf:
         return Response(content=pdf, media_type="application/pdf")

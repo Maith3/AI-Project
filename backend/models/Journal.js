@@ -14,9 +14,12 @@ const JournalsSchema = new mongoose.Schema(
         content: {
             type: String,
             required: true
-        }
+        },
+        sentiment_score: { type: Number },
+        risk_level: { type: String },
+        timestamp: { type: Date },
     }
 );
 
-JournalsSchema.index({userID: 1, entryDateTime: -1}, {unique: true});
+JournalsSchema.index({userId: 1, entryDateTime: -1}, {unique: true});
 module.exports = mongoose.model("Journal", JournalsSchema);

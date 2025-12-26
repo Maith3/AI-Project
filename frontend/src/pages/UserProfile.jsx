@@ -17,6 +17,19 @@ const UserProfile = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const token = localStorage.getItem("token");
+  let userId = null;
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      console.log("JWT payload:", payload);
+      userId = payload.id || payload._id; // same id used in req.userId
+    } catch (e) {
+      console.error("Failed to decode token", e);
+    }
+  }
+
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -78,12 +91,16 @@ const UserProfile = () => {
         My Profile
       </h1>
 
-      <button 
-      className="btn-pill"
-      onClick={() => navigate("/reports")} 
-    >
-      <FaFileAlt style={{ marginRight: "6px" }} /> My Report
-    </button>
+      {userId && (
+  <button
+    className="btn-pill"
+    onClick={() =>
+      window.open(`http://127.0.0.1:8000/report/${userId}`, "_blank")
+    }
+  >
+    <FaFileAlt style={{ marginRight: "6px" }} /> My Report
+  </button>
+)}
 
       <button
         className="btn-edit"
