@@ -22,14 +22,14 @@ const ChatSidebar = () => {
     if (!token) {
       // No login = Demo chat
       sessionStorage.removeItem('maatrucare_chat');
-      setMessages([{ text: "Hello! I am here to support you. How are you feeling right now?", sender: "bot" }]);
+      setMessages([{ text: "Hello! I am here to support you.", sender: "bot" }]);
       setChatId(null);  // Reset chatId for demo
       return;
     }
     
     // New login = Fresh chat (don't load old sessionStorage)
     sessionStorage.removeItem('maatrucare_chat');
-    setMessages([{ text: "Welcome back! How are you feeling today?", sender: "bot" }]);
+    setMessages([{ text: "Hello! I am here to support you.", sender: "bot" }]);
     setChatId(null);  // Reset for new login - will recreate permanent chatId
     console.log("New login detected - fresh chat");
   }, []);

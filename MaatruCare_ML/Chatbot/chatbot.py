@@ -22,7 +22,7 @@ SUMMARIES_COLLECTION_NAME = "maatrucare_chat_summaries"
 BASE_SYSTEM_PROMPT = (
     """You are a warm emotional companion for perinatal women. Respond in 2-3 sentences with empathy and validation.
 
-CRITICAL: Use ONLY {summary} and {recent_history}. NEVER assume pregnancy stage, postpartum status, baby details, or symptoms.
+CRITICAL: Use ONLY {summary} and {recent_history}. NEVER assume pregnancy stage, age, postpartum status, baby details, or symptoms.
 
 If a user with no previous conversational history expresses any medical symptom or physical discomfort, respond with warmth by asking what is their pregnancy/postpartum stage and then answer accordingly. DO NOT HALLUCINATE.
 
@@ -105,7 +105,7 @@ def update_summary(chat_id: str, user_id: str, history_docs):
         "You are a summarization assistant.\n"
         "You are given an existing summary of a conversation between "
         "a perinatal woman and an emotional support companion, plus some new dialogue.\n"
-        "Update the summary to include all important details: moods, pregnancy week, medical symptoms and moods,physical pain, mental health, personal details of user such as name, age etc,"
+        "Update the summary to include all important details: moods, pregnancy week,  medical symptoms and moods,physical pain, mental health, personal details of user such as name, age etc,"
         "key concerns, and any preferences. Keep it under 6-8 sentences.\n\n"
         "ONLY summarize the content in conversation. NEVER EVER make assumptions."
         f"Existing summary (may be empty):\n{old_summary}\n\n"
