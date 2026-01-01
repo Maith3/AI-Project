@@ -15,6 +15,14 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+
+// Add COOP and COEP headers to fix Cross-Origin-Opener-Policy errors
+app.use((req, res, next) => {
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+  res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+  next();
+});
+
 app.use(express.json());
 
 const connectDB = async () => {
