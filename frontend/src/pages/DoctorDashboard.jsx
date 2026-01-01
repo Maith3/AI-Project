@@ -26,40 +26,58 @@ const DoctorDashboard = () => {
     const [myPatients, setMyPatients] = useState([]);
     const [loadingProfile, setLoadingProfile] = useState(true);
 
-    useEffect(() => {
-        const bootstrap = async () => {
-            const token = localStorage.getItem('token');
-            const role = localStorage.getItem('userRole');
-            if (!token) {
-                navigate('/login');
-                return;
-            }
-            if (role && role !== 'professional') {
-                navigate('/dashboard');
-                return;
-            }
+    // --- INITIAL FETCH ON LOAD ---
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          navigate('/');
+          return;
+        }
 
-            try {
-                const res = await axios.get('http://localhost:5000/api/user/doctor-profile', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+        const config = { headers: { Authorization: `Bearer ${token}` } };
 
-                const profile = res.data;
-                setDoctorInfo((prev) => ({
-                    ...prev,
-                    name: profile.fullName || prev.name,
-                    specialty: profile.specialty || profile.role || prev.specialty
-                }));
-            } catch (err) {
-                console.error('Profile load failed', err.response?.data || err.message);
-                if (err.response?.status === 401) navigate('/login');
-            } finally {
-                setLoadingProfile(false);
-            }
-        };
+        // 1. USE THE CORRECT API ENDPOINT
+        // We check '/api/doctor/me'. If it exists, we get data. If not, it throws an error.
+        const res = await axios.get('http://localhost:5000/api/doctor/me', config);
+        
+        // 2. If successful, it means Profile IS Filled. Load the data.
+        const d = res.data;
+        setDoctor({
+          name: d.personalInfo?.name,
+          specialty: d.personalInfo?.specialty,
+          image: d.personalInfo?.image || "https://randomuser.me/api/portraits/men/32.jpg",
+          experience: d.personalInfo?.experience,
+          about: d.personalInfo?.about,
+          education: d.personalInfo?.education,
+          languages: d.personalInfo?.languages || [],
+          fee: d.clinicInfo?.fee,
+          location: d.clinicInfo?.address,
+          timings: d.clinicInfo?.timings,
+          rating: d.stats?.rating || 4.8,
+          reviews: d.stats?.reviews || 0,
+          patientsServed: d.stats?.patientsServed || 0
+        });
+        
+        // If we have data, we stay on the dashboard
+        setLoading(false);
 
-        bootstrap();
-    }, [navigate]);
+      } catch (err) {
+        // 3. IF ERROR IS 400 or 404 -> PROFILE DOES NOT EXIST
+        // This is where we redirect them to the Setup Page
+        if (err.response && (err.response.status === 400 || err.response.status === 404)) {
+          console.log("Profile not found, redirecting to setup...");
+          navigate('/doctor-profile-setup');
+        } else {
+          console.error("Server Error:", err);
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchDashboardData();
+  }, [navigate]);
 
   const handleAccept = (id) => {
     setMyPatients(prev => prev.map(p => p.id === id ? { ...p, status: 'Upcoming' } : p));
@@ -68,6 +86,16 @@ const DoctorDashboard = () => {
   const handleReject = (id) => {
     setMyPatients(prev => prev.filter(p => p.id !== id));
   };
+
+  const handleProfileClick = () => {
+  const isProfileFilled = doctor && doctor.specialty; 
+
+  if (isProfileFilled) {
+    navigate('/doctor-profile-view');
+  } else {
+    navigate('/doctor-profile-setup');
+  }
+};
 
   return (
     <div className="doc-dashboard-container">
@@ -104,7 +132,7 @@ const DoctorDashboard = () => {
                         <span className="doc-brand-sub">Doctor Portal</span>
                     </div>
                     <div className="doc-top-actions">
-                        <button className="doc-chip secondary" onClick={() => navigate('/doctor-profile')}>Profile</button>
+                        <button className="doc-chip secondary" onClick={handleProfileClick}> Profile</button>
                         <button className="doc-chip primary">Notifications</button>
                     </div>
                 </div>

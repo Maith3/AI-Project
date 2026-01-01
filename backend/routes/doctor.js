@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth'); // Your existing auth middleware
-const Doctor = require('../models/Doctor');
+const Doctor = require('../models/DoctorProfile');
 const User = require('../models/User');
 
 // @route   GET api/doctor/me

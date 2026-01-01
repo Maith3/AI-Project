@@ -12,9 +12,7 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 };
-
 app.use(cors(corsOptions));
-
 // Add COOP and COEP headers to fix Cross-Origin-Opener-Policy errors
 app.use((req, res, next) => {
   res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
@@ -65,7 +63,6 @@ const connectDB = async () => {
     process.exit(1); 
   }
 };
-
 connectDB();
 
 const authRoutes = require('./routes/auth'); 

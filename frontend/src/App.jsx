@@ -9,7 +9,8 @@ import UserProfile from './pages/UserProfile';
 import ProfileSetup from './pages/ProfileSetup'
 import DoctorsTeam from './pages/DoctorsTeam';
 import DoctorDashboard from './pages/DoctorDashboard';
-import DoctorProfile from './pages/DoctorProfile';
+import DoctorProfileSetup from './pages/DoctorProfileSetup';
+import DoctorProfileView from './pages/DoctorProfileView';
 
 function App() {
   return (
@@ -27,7 +28,8 @@ function App() {
          <Route path="/doctors-team" element={<DoctorsTeam />} />
 
         <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
-         <Route path="/doctor-profile" element={<DoctorProfile />} />
+        <Route path="/doctor-profile-setup" element={<DoctorProfileSetup />}/>
+        <Route path="/doctor-profile-view" element={<DoctorProfileView />}/>
       </Routes>
     </BrowserRouter>
   );
