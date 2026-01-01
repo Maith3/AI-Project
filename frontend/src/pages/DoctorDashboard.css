@@ -322,7 +322,6 @@
 .doc-status-tag.completed { background-color: #f1f5f9; color: #64748b; }
 .doc-no-data { color: #94a3b8; font-style: italic; }
 
-
 /* --- SCHEDULE TAB STYLES --- */
 
 /* Date Strip (Horizontal Scroll) */
@@ -399,8 +398,6 @@
 
 .appt-card h4 { margin: 0 0 5px 0; color: #1e293b; font-size: 16px; }
 .appt-card p { margin: 0; font-size: 13px; color: #475569; }
-
-/* --- AVAILABILITY TAB STYLES --- */
 
 /* --- AVAILABILITY TAB STYLES --- */
 
@@ -553,4 +550,136 @@ input:checked + .slider:before { transform: translateX(20px); }
   background-color: #be123c;
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(225, 29, 72, 0.3);
+}
+
+/* BASE STYLE (Shape & Layout) */
+.doc-status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-top: 8px;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+/* --- GREEN STYLE (Available) --- */
+.doc-status-indicator.available {
+  background-color: #ecfdf5; /* Light Green */
+  color: #059669;            /* Dark Green Text */
+  border-color: #a7f3d0;
+}
+
+.doc-status-indicator.available .doc-status-dot {
+  width: 8px; height: 8px;
+  background-color: #10b981; /* Green Dot */
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+/* --- RED STYLE (Unavailable) --- */
+.doc-status-indicator.unavailable {
+  background-color: #fff0f3; /* Light Red/Pink */
+  color: #e11d48;            /* Maatrucare Red Text */
+  border-color: #fecaca;
+}
+
+.doc-status-indicator.unavailable .doc-status-dot {
+  width: 8px; height: 8px;
+  background-color: #e11d48; /* Red Dot */
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(225, 29, 72, 0.2);
+}
+
+/* --- DASHBOARD MODAL STYLES (MATCHING PROFILE SETUP) --- */
+.dash-modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6); /* Dimmed background */
+  backdrop-filter: blur(4px); /* Blur effect */
+  display: flex;
+  align-items: center; justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease;
+}
+
+.dash-success-modal {
+  background: white;
+  width: 320px;
+  padding: 40px 30px; /* More padding for spacious look */
+  border-radius: 25px; /* Rounder corners */
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  transform: scale(0.9);
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* THE RED CIRCLE ICON */
+.dash-modal-icon-circle {
+  width: 70px;
+  height: 70px;
+  background-color: #e11d48; /* Maatrucare Red */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 32px; /* Size of the Checkmark */
+  margin-bottom: 20px;
+  box-shadow: 0 10px 20px rgba(225, 29, 72, 0.3); /* Red glow shadow */
+}
+
+/* TEXT STYLES */
+.dash-success-modal h2 {
+  color: #e11d48;
+  margin: 0 0 10px 0;
+  font-size: 24px; /* Larger Title */
+  font-weight: 800; /* Bolder text */
+  letter-spacing: 0.5px;
+}
+
+.dash-success-modal p {
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.5;
+  margin-bottom: 30px;
+  max-width: 260px; /* Ensures text wraps nicely */
+}
+
+/* BUTTON STYLE */
+.dash-modal-btn {
+  background-color: #e11d48;
+  color: white;
+  border: none;
+  padding: 14px 0; /* Vertical padding */
+  width: 100%;     /* Full Width Button */
+  border-radius: 50px; /* Pill Shape */
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(225, 29, 72, 0.4);
+  transition: transform 0.2s;
+}
+
+.dash-modal-btn:hover {
+  background-color: #be123c;
+  transform: translateY(-2px);
+}
+
+/* ANIMATIONS */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popIn {
+  to { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }

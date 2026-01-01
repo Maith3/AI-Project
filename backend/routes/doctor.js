@@ -83,4 +83,27 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
+// @route   PUT api/doctor/availability
+// @desc    Update doctor availability
+// @access  Private
+router.put('/availability', auth, async (req, res) => {
+  try {
+    const { availability } = req.body;
+
+    let profile = await Doctor.findOne({ user: req.user.id });
+
+    if (!profile) {
+      return res.status(404).json({ msg: 'Profile not found' });
+    }
+
+    profile.availability = availability;
+
+    await profile.save();
+    res.json(profile); 
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;

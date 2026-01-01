@@ -31,6 +31,14 @@ const DoctorSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  availability: [
+    {
+      day: { type: String },
+      active: { type: Boolean, default: true },
+      start: { type: String },
+      end: { type: String }
+    }
+  ],
   date: {
     type: Date,
     default: Date.now
