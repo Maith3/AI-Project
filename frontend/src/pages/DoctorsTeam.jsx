@@ -20,7 +20,7 @@ const DoctorsTeam = () => {
     name: 'Dr. Muskan',
     specialty: 'Gynecologist',
     email: 'muskanfayaz48@gmail.com',
-    phone: '+91 9535931452', // Valid looking format
+    phone: '+91 7875965536', // Valid looking format
     image: 'https://randomuser.me/api/portraits/women/32.jpg', // Professional ID photo
     isVerified: true, 
     location: 'Mysuru, Karnataka'
