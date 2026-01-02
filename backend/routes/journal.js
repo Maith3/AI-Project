@@ -48,6 +48,7 @@ router.post("/", authMiddleware, async (req, res) => {
       content: journal.content,
     });
 
+    // Fire mood API (non-blocking)
     fetch(MOOD_API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -60,20 +61,39 @@ router.post("/", authMiddleware, async (req, res) => {
       .then(async (r) => {
         const bodyText = await r.text();
         console.log("Mood API status:", r.status);
-        console.log("Mood API raw body:", bodyText);
-
+        
         let data;
         try {
           data = JSON.parse(bodyText);
         } catch {
           data = bodyText;
         }
-        console.log("Mood stored for journal (parsed):", data);
+        console.log("Mood stored:", data);
+
+        // 🚨 HIGH RISK → DOCTOR WHATSAPP
+        if (data.risk_level === 'High Risk') {
+          console.log('🚨 HIGH RISK DETECTED - checking profile...');
+          
+          const Profile = require('../models/Profile');
+          const profile = await Profile.findOne({ user: req.userId }).select('fullName selectedDoctor');
+          
+          console.log('Profile found:', !!profile, 'Doctor:', profile?.selectedDoctor);
+          
+          if (profile?.selectedDoctor?.phone) {
+            console.log('✅ Sending to:', profile.selectedDoctor.phone);
+            const { sendDoctorAlert } = require('../services/whatsapp');
+            await sendDoctorAlert(profile.selectedDoctor.phone, profile.fullName, data.risk_level);
+            console.log(`🚨 DOCTOR ALERT SENT → ${profile.selectedDoctor.phone}`);
+          } else {
+            console.log('❌ No doctor phone in profile');
+          }
+        }
       })
       .catch((err) => {
         console.error("Mood API error (network):", err);
       });
 
+    // Respond immediately
     res.status(201).json(journal);
   } catch (err) {
     console.error("POST /journals error:", err);
