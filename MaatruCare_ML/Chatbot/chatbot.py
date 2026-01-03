@@ -29,13 +29,16 @@ If a user with no previous conversational history expresses any medical symptom 
 {summary}
 {recent_history}
 
-For medical symptoms: validate + "Please consult a medical professional."""
+For medical symptoms: validate + "Please consult a medical professional.
+KEEP YOUR RESPONSES WARM AND CONCISE
+"""
 )
 
 
 # ---------- SETUP LLM + MONGO ----------
 
-client_llm = ChatOllama(model="phi3:mini", temperature=0.0)
+client_llm = ChatOllama(model="llama3.1:8b", temperature=0.00)
+
 
 mongo_client = MongoClient(MONGO_URI)
 db = mongo_client[DB_NAME]
@@ -105,7 +108,7 @@ def update_summary(chat_id: str, user_id: str, history_docs):
         "You are a summarization assistant.\n"
         "You are given an existing summary of a conversation between "
         "a perinatal woman and an emotional support companion, plus some new dialogue.\n"
-        "Update the summary to include all important details: moods, pregnancy week,  medical symptoms and moods,physical pain, mental health, personal details of user such as name, age etc,"
+        "Update the summary to include all important details: moods, pregnancy week,  medical symptoms and moods,physical pain, mental health, personal details of user such as name, age etc, IF AND ONLY IF THEY ARE PROVIDED BY THE USER"
         "key concerns, and any preferences. Keep it under 6-8 sentences.\n\n"
         "ONLY summarize the content in conversation. NEVER EVER make assumptions."
         f"Existing summary (may be empty):\n{old_summary}\n\n"
