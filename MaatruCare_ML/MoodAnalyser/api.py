@@ -61,7 +61,12 @@ def analyze_mood(req: MoodRequest):
     res = moods_collection.update_one(filter_, update)
     print("Mongo matched:", res.matched_count, "modified:", res.modified_count)
 
-    return {"matched": res.matched_count, "modified": res.modified_count}
+    return {
+    "risk_level": result["risk_level"],  # "High Risk"
+    "sentiment_score": result["sentiment_score"],
+    "matched": res.matched_count,
+    "modified":  res.modified_count
+    }
 
 
 @app.post("/check-alerts")
