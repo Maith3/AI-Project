@@ -23,10 +23,10 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
-// Chatbot proxy -> port 8001
+// Chatbot proxy -> port 8000
 app.post('/api/chat', async (req, res) => {
   try {
-    const pyRes = await fetch('http://localhost:8001/api/chat', {
+    const pyRes = await fetch('http://localhost:8000/api/chat', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(req.body)
